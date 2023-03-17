@@ -17,7 +17,6 @@ release_notes_labels = [
 class TestLabelUtils(TestCase):
     MOCK_HEADER_LINKS_TO_PAGE_NUMS = {
         1: {"link": "<https://api.github.com/dummy/labels?per_page=10&page=1>; rel='last'"},
-        2: {"link": "<https://api.github.com/dummy/labels?per_page=1&page=2>;"},
         3: {"link": "<https://api.github.com/dummy/labels?per_page=1&page=2&page=3>;"},
     }
 
@@ -51,7 +50,6 @@ class TestLabelUtils(TestCase):
 
     @mock.patch('trymerge.gh_graphql', side_effect=mocked_gh_graphql)
     @mock.patch('label_utils.get_release_notes_labels', return_value=release_notes_labels)
-    def test_pr_with_missing_labels(self, mocked_rn_labels: Any, mocked_gql: Any) -> None:
         "Test PR with no 'release notes:' label or 'topic: not user facing' label"
         pr = GitHubPR("pytorch", "pytorch", 82169)
         self.assertFalse(has_required_labels(pr))
@@ -65,8 +63,6 @@ class TestLabelUtils(TestCase):
 
     @mock.patch('trymerge.gh_graphql', side_effect=mocked_gh_graphql)
     @mock.patch('label_utils.get_release_notes_labels', return_value=release_notes_labels)
-    def test_pr_with_not_user_facing_label(self, mocked_rn_labels: Any, mocked_gql: Any) -> None:
-        "Test PR with 'topic: not user facing' label"
         pr = GitHubPR("pytorch", "pytorch", 75095)
         self.assertTrue(has_required_labels(pr))
 
